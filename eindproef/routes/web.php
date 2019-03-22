@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/register', 'registerController@index');
+Route::post('/register', 'registerController@register');
+
 Route::get('/', function () {
     return view('login/login');
 });
+
