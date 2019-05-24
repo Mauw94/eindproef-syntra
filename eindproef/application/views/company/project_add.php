@@ -6,7 +6,7 @@
                 <input type="text"  class="menu-input reg-input" name="name" placeholder="Name">
             </div>
             <div class="form-group">
-                <input type="text" class="menu-input reg-input" name="title" placeholder="Title">
+                <input type="text" class="menu-input reg-input" name="prog_lang" placeholder="Main programming language">
             </div>
             <div class="form-group">
                 <input type="text" class="menu-input reg-input" name="project_owner" placeholder="Project leader">
@@ -15,7 +15,10 @@
                 <textarea type="text" class="menu-input reg-input" name="description" placeholder="Description"></textarea>
             </div>
             <div class="form-group">
-                <input type="text" class="menu-input reg-input" name="prog_lang" placeholder="Programming languages">
+                <textarea type="text" class="menu-input reg-input" name="location" placeholder="Location"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="text" class="menu-input reg-input" name="keys" placeholder="Key words">
             </div>    
             <div class="form-group">
                 <label style="margin-left: 200px;">Project start date</label>    

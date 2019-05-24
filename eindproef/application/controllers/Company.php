@@ -11,7 +11,9 @@ class Company extends Auth {
     function __construct()
     {
         parent::__construct();
+        parent::deny_user();
         $this->load->model('Company_model');
+        $this->load->model('Project_model');
     }
 
     function index()
@@ -42,8 +44,7 @@ class Company extends Auth {
             $result = $this->Company_model->save_company_profile();
 
             if ($result) {
-                // redirect home page for companies
-                echo 'works!';
+                $this->index();
             } else {
                 echo 'oops, something went wrong';
             }
@@ -73,7 +74,6 @@ class Company extends Auth {
 
     function update_profile()
     {
-        $this->form_validation->set_rules('name', 'name', 'required');
         $this->form_validation->set_rules('looking_for', 'looking for', 'required');
         
         if ($this->form_validation->run() == FALSE) {
@@ -107,17 +107,65 @@ class Company extends Auth {
         $this->load->view('templates/footer');
     }
 
+    function delete_project($id)
+    {
+        $result = $this->Company_model->delete_project($id);
+        if ($result) {
+            $this->index();
+        } else {
+            echo 'error';
+        }
+    }
+
+    function edit_project($id)
+    {
+        $project = $this->Project_model->details($id);
+
+        $data = array(
+            'project' => $project,
+            'action' => site_url('company/update_project')
+        );
+
+        $this->load->view('templates/header_company');
+        $this->load->view('company/project_edit', $data);
+        $this->load->view('templates/footer');
+    }
+
+    function update_project()
+    {
+        $this->form_validation->set_rules('name', 'name', 'required');
+        $this->form_validation->set_rules('prog_lang', 'prog_lang', 'required');
+        $this->form_validation->set_rules('description', 'description', 'required');
+        $this->form_validation->set_rules('project_owner', 'project_owner', 'required');
+        $this->form_validation->set_rules('location', 'location', 'required');
+        $this->form_validation->set_rules('start_date', 'start_date', 'required');
+        $this->form_validation->set_rules('end_date', 'end_date', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->index();
+        } else {
+            $result = $this->Project_model->update_project();
+
+            if ($result) {
+                $this->index();
+            } else {
+                echo 'error';
+            }
+        }
+    }
+
     function save_project()
     {
-        $this->form_validation->set_rules('title', 'title', 'required');
+        $this->form_validation->set_rules('prog_lang', 'prog_lang', 'required');
         $this->form_validation->set_rules('description', 'description', 'required');
+        $this->form_validation->set_rules('location', 'locaiton', 'required');
 
         if ($this->form_validation->run() == FALSE) {
             $this->project_add();
         } else {
             $result = $this->Company_model->save_project();
             if ($result) {
-                redirect('company');
+                $this->index();
             } else {
                 $this->project_add();
             }

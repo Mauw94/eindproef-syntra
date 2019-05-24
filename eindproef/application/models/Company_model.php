@@ -48,18 +48,16 @@ class Company_model extends CI_Model {
 
     function update_profile()
     {
-        $name = $this->input->post('name');
         $contact_person = $this->input->post('contact_person');
         $looking_for = $this->input->post('looking_for');
         $email = $this->input->post('email');
         $phone = $this->input->post('phone');
 
-        $sql = "UPDATE companies set name = '$name', contact_person = '$contact_person', 
+        $sql = "UPDATE companies set contact_person = '$contact_person', 
                     looking_for = '$looking_for', email = '$email', phone = '$phone'";
         $result = $this->db->query($sql);
 
         if ($this->db->affected_rows() == 1) {
-            $this->session->userdata('company')['name'] = $name;
             return $result;
         } else {
             echo 'something went wrong';
@@ -88,21 +86,23 @@ class Company_model extends CI_Model {
     {
         $company_id = $this->session->userdata('company')['user_id'];
         $name = $this->input->post('name');
-        $title = $this->input->post('title');
+        $prog_lang = $this->input->post('prog_lang');
         $project_owner = $this->input->post('project_owner');
         $description = $this->input->post('description');
-        $prog_lang = $this->input->post('prog_lang');
+        $keys = $this->input->post('keys');
+        $location = $this->input->post('location');
         $start_date = $this->input->post('start_date');
         $end_date = $this->input->post('end_date');
 
-        $sql = "INSERT INTO projects (name, title, description, prog_languages, project_owner, start_date, end_date, company_id)
+        $sql = "INSERT INTO projects (name, prog_lang, description, keywords, project_owner, start_date, end_date, location, company_id)
                 VALUES(" . $this->db->escape($name) . ",
-                        " . $this->db->escape($title) . ",
-                        " . $this->db->escape($description) . ",
                         " . $this->db->escape($prog_lang) . ",
+                        " . $this->db->escape($description) . ",
+                        " . $this->db->escape($keys) . ",
                         " . $this->db->escape($project_owner) . ",
                         " . $this->db->escape($start_date) . ",
                         " . $this->db->escape($end_date) . ",
+                        " . $this->db->escape($location) . ",
                         '" . $company_id . "')";
         $result = $this->db->query($sql);
 
@@ -110,6 +110,18 @@ class Company_model extends CI_Model {
             return $result;
         } else {
             echo 'Something went wrong.';
+        }
+    }
+
+    function delete_project($id) 
+    {
+        $sql = "DELETE FROM projects WHERE id = ${id}";
+        $result = $this->db->query($sql);
+
+        if ($this->db->affected_rows() === 1) {
+            return $result;
+        } else {
+            echo 'error in deleting';
         }
     }
 }
