@@ -124,4 +124,66 @@ class Company_model extends CI_Model {
             echo 'error in deleting';
         }
     }
+
+    function get_applicants_for($id) 
+    {
+        // get all user_ids from applied_projects where project_id = id
+        $user_ids = array();
+        $users = array();
+        $continue = FALSE;
+
+        $sql = "SELECT user_id FROM applied_projects WHERE project_id = ${id}";
+        $result = $this->db->query($sql);
+
+        if ($this->db->affected_rows() >= 1) {
+            array_push($user_ids, $result->result());
+            $continue = TRUE;
+        } else {
+            $continue = FALSE;
+        }
+
+        if ($continue) {
+            $new = $user_ids[0];
+            foreach ($new as $user) {
+                $id = $user->user_id;
+                
+                $sql = "SELECT * FROM users WHERE id = ${id}";
+                $result = $this->db->query($sql);
+
+                if ($this->db->affected_rows() === 1) {
+                    array_push($users, $result->result());
+                }
+            }
+        }   
+        
+        return $users;
+    }
+
+    function send_acceptation_email($applicant_email)
+    {
+        $config = Array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.googlemail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'mauritsseelen@gmail.com',
+            'smtp_pass' => 'upbtdwqttfpgngql',
+            'mailtype'  => 'html',
+            'newline'   => "\r\n"
+        );
+        $this->load->library('email', $config);
+        $company_mail = $this->session->userdata('company')['email'];
+        $company_name = $this->session->userdata('company')['name'];
+        $this->email->from($company_mail);
+        $this->email->to($applicant_email);
+        $this->email->subject('Application accepted');
+        $message = '<!DOCTYPE html><html><body>';
+        $message .= '<p>We at ' . $company_name . ' have accepted your application. Our project leader will contact you shortly.</p>';
+        $message .= '</body></html>';
+        $this->email->message($message);
+        if ($this->email->send()) {
+            return true;
+        } else {
+            show_error($this->email->print_debugger());
+        }
+    }
 }

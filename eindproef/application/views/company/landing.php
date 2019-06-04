@@ -8,10 +8,10 @@
 
     <div class="company-landing">
         <p>Overview of <?php echo $name;?> projects</p>
-
+        <p><b><?php echo $msg;?></b></p>
         <div class="row"  style="margin-top: 50px;">
             <!-- iterate over projects and display in cards !-->
-            <?php             
+            <?php   
             if ($projects == 'none found') {
                 ?>
                 <p>You have no projects added yet, click <a href="<?php echo base_url();?>company/project_add" class="btn btn-info">here</a> to add one!</p>
@@ -33,7 +33,8 @@
                         <hr>
                         <div style="width: 50%; display:flex;">
                             <a href="<?php echo base_url();?>company/edit_project/<?php echo $project->id;?>" class="btn btn-sm btn-info" style="margin-right: 10px;"><i class="fa fa-folder"></i></a>
-                            <a href="<?php echo base_url();?>company/delete_project/<?php echo $project->id;?>" class="btn btn-sm btn-danger" onclick="delete()"><i class="fa fa-trash"></i></a>
+                            <a href="<?php echo base_url();?>company/delete_project/<?php echo $project->id;?>" class="btn btn-sm btn-danger" style="margin-right: 10px;" onclick="delete()"><i class="fa fa-trash"></i></a>
+                            <a href="<?php echo base_url();?>company/view_applicants/<?php echo $project->id;?>/<?php echo $project->name;?>" class="btn btn-sm btn-info" ><b>Applicants</b></a>
                         </div>
                     </div>
                 </div>
@@ -41,16 +42,6 @@
             <?php } 
             } ?>
         </div>
-    </div>
+    </div>          
 </div>
 
-<script type="text/javascript">
-    function delete() {
-        var r = confirm('Are you sure you want to delete this project?');
-        if (r==true) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
